@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<text>
+<body>
+<termEntry>
+	<langSet xml:lang="en">
+		<ntig>
+			<termGrp>
+				<term>ACADEMIC AWARD LEVEL - PRIMARY</term>
+			</termGrp>
+		</ntig>
+		<descrip type="definition">The award level of the student’s ACADEMIC PROGRAM – PRIMARY.</descrip>
+		<descrip type="example">[SIRIS STUDENT element SE035] </descrip>
+		<descrip type="example">SIRIS reporting codes are as follows:</descrip>
+		<descrip type="example">1  Undergraduate Certificates and Diplomas </descrip>
+		<descrip type="example">2  Associate </descrip>
+		<descrip type="example">3  Baccalaureate </descrip>
+		<descrip type="example">4  Master’s </descrip>
+		<descrip type="example">5  Doctoral </descrip>
+		<descrip type="example">6  First professional (AuD, DDS, DNP, DPT, DVM, LLM, JD, MD, PharmD, OD) </descrip>
+		<descrip type="example">7  Graduate certificate </descrip>
+		<descrip type="example">8  Not in a program </descrip>
+	</langSet>
+</termEntry>
+</body>
+</text>
