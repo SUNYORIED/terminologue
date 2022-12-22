@@ -13,20 +13,19 @@ var db=new sqlite3.Database(dbpath, sqlite3.OPEN_READWRITE);
 db.run('PRAGMA journal_mode=WAL');
 db.run('PRAGMA foreign_keys=on');
 
-var lang_id2abbr={}; //eg. "432543" -> "ga"
-var subdomain2superdomain={}; //eg. "545473" --> "544354"
-var lowAcceptLabelIDs=[];
-var changeID=0;
-var xrefs={}; //conceptID -> [conceptID]
-var todDates={}; //termID -> [date]
-var noteTypeIDs=["913502", "4141127", "913493", "913508", "5346857", "913504"];
+var terms={};
 var termbaseID = 'sysadmglossary';
 var importUser = 'bridget.almas@suny.edu';
 var metadata = {'source': 1, 'collection': 2}
+var importDate="2022-12-01T00:00:00";
+var toSave = {};
 
-deed();
+console.log("run doIRTerms() first then re-execute script and run doXrefs()")
+// too lazy to figure out how to handle the asynchroniciity to get the script to wait on doIRTerms before running doXRefs()
+//doIRTerms()
+//doXrefs();
 
-function deed(){
+function doIRTerms(){
   var siteconfig=JSON.parse(fs.readFileSync("../siteconfig.json", "utf8").trim());
   ops.siteconfig=siteconfig;
   db.exec("delete from entries; delete from history; delete from metadata; delete from terms; delete from entry_term; delete from sqlite_sequence", function(err){
@@ -35,24 +34,63 @@ function deed(){
     doSources(db, function(){
       doCollections(db, function(){
         doTbx(db, function(){
-          db.run("COMMIT");
-          db.close();
-          console.log(`finito`);
-       });
+            db.run("COMMIT");
+            db.close();
+            console.log(`finito`);
+         });
       });
     });
   });
 }
 
 function doTbx(db,callnext) {
-    var xml=fs.readFileSync("../../sunydata/sample.xml", 'utf8');
+    var xml=fs.readFileSync("../../sunydata/irglossary-20221201final.xml", 'utf8');
+    //var xml=fs.readFileSync("../../sunydata/sample.xml", 'utf8');
     var doc=domParser.parseFromString(xml, 'text/xml');
     var entries = doc.documentElement.getElementsByTagName("termEntry");
     for (var i=0; i<entries.length; i++) {
-      tosave = doEntry(entries[i]);
-      ops.entrySave(db, termbaseID, i, JSON.stringify(tosave), importUser, {},function(){}) 
+      var id = i+1;
+      toSave[id] = doEntry(entries[i],id);
     }
-    callnext()
+    for (const id in toSave) {
+       if (toSave.hasOwnProperty(id)) {
+         ops.entrySave(db, termbaseID, id, JSON.stringify(toSave[id]), importUser, {},function(){});
+       }
+    }
+    callnext();
+}
+
+function doXrefs() { 
+    var siteconfig=JSON.parse(fs.readFileSync("../siteconfig.json", "utf8").trim());
+    ops.siteconfig=siteconfig;
+    var xml=fs.readFileSync("../../sunydata/irglossary-20221201final.xml", 'utf8');
+    //var xml=fs.readFileSync("../../sunydata/sample.xml", 'utf8');
+    var doc=domParser.parseFromString(xml, 'text/xml');
+    var entries = doc.documentElement.getElementsByTagName("termEntry");
+    for (var i=0; i<entries.length; i++) {
+      var id = i+1;
+      toSave[id] = doEntry(entries[i],id);
+    }
+    for (const entryID in toSave) {
+       if (toSave.hasOwnProperty(entryID)) {
+	   entry = toSave[entryID];
+           for (j in entry.definitions) {
+	       def = entry.definitions[j];
+	       found = findXRef(def.texts.en);
+	       if (Object.keys(found).length > 0) {
+		   xrefs = {};
+	           for (const word in found) {
+	               def.texts.en = def.texts.en.replaceAll(word,toCamelCase(word));
+		       xrefs[found[word]] = 1;
+	           }
+		   for (ref in xrefs) {
+	               entry.xrefs.push(ref);
+	           }
+		}
+            }
+            ops.entrySave(db, termbaseID, entryID, JSON.stringify(toSave[entryID]), importUser, {},function(){});
+        }
+    }
 }
 
 function doSources(db, callnext){
@@ -77,12 +115,12 @@ function doCollections(db, callnext){
   callnext();
 }
 
-function doEntry(xml){
+function doEntry(xml,id){
   const ENTRY={
   "cStatus": "0",
-  "pStatus": "1",
-  "dStatus": "1",
-  "dateStamp": "",
+  "pStatus": "0",
+  "dStatus": "0",
+  "dateStamp": importDate,
   "tod": "",
   "domains": [],
   "desigs": [],
@@ -96,6 +134,8 @@ function doEntry(xml){
   };
   var entry=JSON.parse(JSON.stringify(ENTRY));
   entry.desigs=doTerms(xml.getElementsByTagName("term"));
+  terms[entry.desigs[0].term.wording] = id;
+  entry.desigs[0].term.wording = toCamelCase(entry.desigs[0].term.wording);
   var langCode="xx"; if(entry.desigs.length>0) langCode=entry.desigs[0].term.lang;
   var elDescrips=xml.getElementsByTagName("descrip");
   var examplesToMerge = []
@@ -218,4 +258,26 @@ function doTerms(elTerms){
 function closest(el, tagNames){
   while(el.parentNode && tagNames.indexOf(el.parentNode.tagName)==-1) el=el.parentNode;
   return el.parentNode;
+}
+
+function findXRef(text) {
+    var regex = /[A-Z]{2,}[A-Z|\-|\s|\/]*/g;
+    var result;
+    found = {};
+    while ((result = regex.exec(text)) !== null) {
+	result = result[0].trim();
+	if (result in terms) {
+	  found[result] = terms[result];
+        }
+    }
+    return found;
+}
+
+function toCamelCase(phrase) {
+    const words = phrase.split(" ");
+    for (let i = 0; i < words.length; i++) {
+	words[i] = words[i].toLowerCase();
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+    }
+    return words.join(" ");
 }
