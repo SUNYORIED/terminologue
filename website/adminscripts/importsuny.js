@@ -16,14 +16,14 @@ db.run('PRAGMA foreign_keys=on');
 var terms={};
 var termbaseID = 'sysadmglossary';
 var importUser = 'bridget.almas@suny.edu';
-var metadata = {'source': 1, 'collection': 2}
+var metadata = {'source': 1, 'collectionIR': 2, 'collectionSIRIS': 3, 'collectionAcronyms':4}
 var importDate="2022-12-01T00:00:00";
 var toSave = {};
 
 console.log("run doIRTerms() first then re-execute script and run doXrefs()")
 // too lazy to figure out how to handle the asynchroniciity to get the script to wait on doIRTerms before running doXRefs()
 //doIRTerms()
-//doXrefs();
+doXrefs();
 
 function doIRTerms(){
   var siteconfig=JSON.parse(fs.readFileSync("../siteconfig.json", "utf8").trim());
@@ -45,12 +45,19 @@ function doIRTerms(){
 
 function doTbx(db,callnext) {
     var xml=fs.readFileSync("../../sunydata/irglossary-20221201final.xml", 'utf8');
-    //var xml=fs.readFileSync("../../sunydata/sample.xml", 'utf8');
+    var xmlA=fs.readFileSync("../../sunydata/acronyms-20221201final.xml", 'utf8');
     var doc=domParser.parseFromString(xml, 'text/xml');
     var entries = doc.documentElement.getElementsByTagName("termEntry");
+    var docA=domParser.parseFromString(xmlA, 'text/xml');
+    var entriesA = docA.documentElement.getElementsByTagName("termEntry");
+    var id = 0;
     for (var i=0; i<entries.length; i++) {
-      var id = i+1;
-      toSave[id] = doEntry(entries[i],id);
+      id = id+1;
+      toSave[id] = doEntry(entries[i],id,[metadata.collectionIR]);
+    }
+    for (var i=0; i<entriesA.length; i++) {
+      id = id+1;
+      toSave[id] = doEntry(entriesA[i],id,[metadata.collectionAcronyms]);
     }
     for (const id in toSave) {
        if (toSave.hasOwnProperty(id)) {
@@ -64,12 +71,20 @@ function doXrefs() {
     var siteconfig=JSON.parse(fs.readFileSync("../siteconfig.json", "utf8").trim());
     ops.siteconfig=siteconfig;
     var xml=fs.readFileSync("../../sunydata/irglossary-20221201final.xml", 'utf8');
+    var xmlA=fs.readFileSync("../../sunydata/acronyms-20221201final.xml", 'utf8');
     //var xml=fs.readFileSync("../../sunydata/sample.xml", 'utf8');
     var doc=domParser.parseFromString(xml, 'text/xml');
     var entries = doc.documentElement.getElementsByTagName("termEntry");
+    var docA=domParser.parseFromString(xmlA, 'text/xml');
+    var entriesA = docA.documentElement.getElementsByTagName("termEntry");
+    var id=0;
     for (var i=0; i<entries.length; i++) {
-      var id = i+1;
-      toSave[id] = doEntry(entries[i],id);
+      id = id+1;
+      toSave[id] = doEntry(entries[i],id,[metadata.collectionIR]);
+    }
+    for (var i=0; i<entriesA.length; i++) {
+      id = id+1;
+      toSave[id] = doEntry(entriesA[i],id,[metadata.collectionAcronyms]);
     }
     for (const entryID in toSave) {
        if (toSave.hasOwnProperty(entryID)) {
@@ -80,7 +95,6 @@ function doXrefs() {
 	       if (Object.keys(found).length > 0) {
 		   xrefs = {};
 	           for (const word in found) {
-	               def.texts.en = def.texts.en.replaceAll(word,toCamelCase(word));
 		       xrefs[found[word]] = 1;
 	           }
 		   for (ref in xrefs) {
@@ -96,7 +110,7 @@ function doXrefs() {
 function doSources(db, callnext){
   var json={
     title: {
-      en: 'IR Glossary'
+      en: 'IR'
     }
   };
   ops.metadataUpdate(db, termbaseID, "source", metadata.source, JSON.stringify(json), function(){})
@@ -105,20 +119,30 @@ function doSources(db, callnext){
 }
 
 function doCollections(db, callnext){
-  var json={
-    title: {
-      en: 'SIRIS Data Elements'
+  collections = [];
+  collections.push({_id:metadata.collectionSIRIS, title: {en: 'SIRIS Data Elements'}});
+  collections.push({_id:metadata.collectionIR, title: {en: 'IR Glossary'}});
+  collections.push({_id:metadata.collectionAcronyms, title: {en: 'Common Acronyms'}});
+  doOne();
+  function doOne(){
+    if(collections.length>0){
+      var collection=collections.pop();
+      var id=collection._id;
+      delete collection._id;
+      ops.metadataUpdate(db, termbaseID, "collection", id, JSON.stringify(collection), function(){
+        doOne();
+      })
+    } else {
+      console.log("collections done");
+      callnext();
     }
   };
-  ops.metadataUpdate(db, termbaseID, "collection", metadata.collection, JSON.stringify(json), function(){})
-  console.log("collections done");
-  callnext();
 }
 
-function doEntry(xml,id){
+function doEntry(xml,id,collections){
   const ENTRY={
   "cStatus": "0",
-  "pStatus": "0",
+  "pStatus": "1",
   "dStatus": "0",
   "dateStamp": importDate,
   "tod": "",
@@ -128,14 +152,16 @@ function doEntry(xml,id){
   "definitions": [],
   "examples": [],
   "notes": [],
-  "collections": [],
+  "collections": collections,
   "extranets": [],
   "xrefs": []
   };
   var entry=JSON.parse(JSON.stringify(ENTRY));
   entry.desigs=doTerms(xml.getElementsByTagName("term"));
   terms[entry.desigs[0].term.wording] = id;
-  entry.desigs[0].term.wording = toCamelCase(entry.desigs[0].term.wording);
+  if (entry.collections[0] != metadata.collectionAcronyms) {
+    entry.desigs[0].term.wording = toCamelCase(entry.desigs[0].term.wording);
+  }
   var langCode="xx"; if(entry.desigs.length>0) langCode=entry.desigs[0].term.lang;
   var elDescrips=xml.getElementsByTagName("descrip");
   var examplesToMerge = []
@@ -179,7 +205,7 @@ function doEntry(xml,id){
     }
     entry.examples.push(mergedExample)
     // if it has an example it is a SIRIS data element
-    entry.collections.push(metadata.collection)
+    entry.collections.push([metadata.collectionSIRIS])
   }
   return entry;
 }
@@ -276,8 +302,37 @@ function findXRef(text) {
 function toCamelCase(phrase) {
     const words = phrase.split(" ");
     for (let i = 0; i < words.length; i++) {
-	words[i] = words[i].toLowerCase();
-        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+	// keep all caps in parens
+	if (! words[i].match(/^\([A-Z]+\)$/)) {
+	  words[i] = words[i].toLowerCase();
+          words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+	}
     }
     return words.join(" ");
+}
+
+function doDomains(db, callnext){
+  var domains=[];
+  var DOMAINSHELL = {
+      _id: null,
+      title: {
+        en: ""
+      },
+      subdomains: []
+  };
+  domains[id]=json;
+  doOne();
+  function doOne(){
+    if(domains.length>0){
+      var domain=domains.pop();
+      var id=domain._id;
+      delete domain._id;
+      ops.metadataUpdate(db, termbaseID, "domain", id, JSON.stringify(domain), function(){
+        doOne();
+      })
+    } else {
+      console.log("domains done");
+      callnext();
+    }
+  };
 }
