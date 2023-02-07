@@ -1,0 +1,6 @@
+Source	Term	Definition	Collection	Last Updated	Example Text	See Also
+SUNY Online	Course ID	"Course ID is a unique key to identify each course (similar to a social security number). The ID is comprised of the Semester, Campus Code, Course Code, and Section Number."			22SU_ADI_ACC101_1   22FA_STB_BUS101_1	Might be the same as Course Section ID reported by campuses in SIRIS Data?
+SUNY Online	General Education Area(s)	"Indication of which, if any, SUNY General Education requirements are approved to be satisifed by this course"			American History   Basic Communication   Foreign Language   Humanities   Mathematics   Natural Sciences   Other World Civilizations   Social Sciences   Arts   Western Civilization	Should match how we reference this in SIRIS and in other systems that reference Gen Ed Areas
+SUNY Online	Level	Description of the academic level of the course			Graduate   Upper Level Undergraduate   Lower Level Undergraduate	Should match how we reference this in SIRIS and in other systems that reference course levels
+SUNY Online	Credits	The number of academic credits awarded for the completion on this course			1   1.5   2   2.5   3   3.5   4	Should match how we reference this in SIRIS and in other systems that reference Number of credits
+SUNY Online	Start date	"The day, in MM/DD/YYYY format, when the course begins"			03/15/2021   11/12/2021	

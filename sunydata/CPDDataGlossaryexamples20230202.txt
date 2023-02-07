@@ -1,0 +1,6 @@
+Source	Term	Definition	Collection	Last Updated	Example Text	See Also
+SUNY CPD	Personally Identifable Information (PII)	Contact and SUNY Identity Information		2/1/2023	"Name, Email, SUNY Global ID, Pronouns = She/Her, He/Him, Other "	
+SUNY CPD	Payment Types	Method of Payment for CPD Programs		2/1/2023	CPD Points = Membership money on account                                     TECH Points = Technical Membership money on account JT= Journal Transfer Payment	
+SUNY CPD	ADA Accommodations	Person is in need of an accommodation in order to particpate in Program		2/1/2023	Audio = Needs a visual cue for participation                 Visual=Needs an audio cue for participation                               Physical = Needs a physical accommodation to participate in program	
+SUNY CPD	Organizational Group Membership/Alignment	Indication of identification to a community of practice within SUNY		2/1/2023	COA = Copmputer Officiers Association                              DOODLE = Directors of Online Distance Learning Environments CCIO = Council of Chief Information Officers 	
+SUNY CPD	Membership 	Indication of a campus membership with the SUNY CPD		2/1/2023	CPD Member= Pays for a General Membership in the SUNY CPD   Technical Member = Pays for a Membership to the CPD Technical Program	
