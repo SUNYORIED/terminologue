@@ -112,12 +112,14 @@ function doEntry(data){
   var entry =JSON.parse(JSON.stringify(ENTRY));
   entry.desigs=doTerms(data['term']);
   var langCode="en";
-  examples = data['example'].split(/\s\s+/);
-  var example = {texts: {'en': []}, sources: [{'id': data['source'], 'lang': 'en'}], nonessential: "0"};
-  examples.forEach(sentence => {
-    example.texts[langCode].push(sentence)
-  });
-  entry['examples'].push(example)
+  if (data['example']) {
+    var examples = data['example'].split(/\s\s+/);
+    var example = {texts: {'en': []}, sources: [{'id': data['source'], 'lang': 'en'}], nonessential: "0"};
+    examples.forEach(sentence => {
+      example.texts[langCode].push(sentence)
+    });
+    entry['examples'].push(example)
+  }
   var definition={texts: {}, domains: [], sources: [{'id':data['source'], 'lang':'en'}], nonessential: "0"};
   definition.texts[langCode]=data['definition'];
   entry.definitions.push(definition);

@@ -1,0 +1,12 @@
+Source	Term	Definition	Collection	Last Updated	Example Text	See Also
+OSC	Increment Code	Code from OSC which indicates when classified employees are due a step increase	SUNY HR			
+SUNY HR	Notice Date	"For Term Appointment, Date  renewel notice is due"	SUNY HR			
+SUNY HR	Academic Rank Date	"For faculty or librarians, date they achieved academic rank"	SUNY HR			
+SUNY HR	Adjunct Indicator	Indicator to determine if the employee is an adjunct.  Not all campuses use the Adjunct titles for their adjunct faculty	SUNY HR			
+SUNY HR	Tenure Status	The status of an employee as it relates to his/her tenure	SUNY HR		"T=Tenured,  R=Tenure-Track, N=Non-Tenure Track for UUP Titles Only"	
+SUNY HR	Fulltime Partime Indicator	Derived from appointment percent and title	SUNY HR		"F=Full Time, P=Part Time."	
+SUNY HR	Appointment Type	Identification of the type of appointment the employee is in	SUNY HR		CONT-CONTINGENT PERMANENT   CTNG-CONTINUING   PERM-PERMANENT   PROB-PROBATIONARY   PROV-PROVISIONAL   TEMP-TEMPORARY   TERM-TERM   ADM-ADMINISTRATIVE   UNKN-Unknown   NA-Not Available	
+SUNY HR	Budget FTE	"Budgeted Full Time Equivalent for the position. On filled positions, this is usually the actual salary of the employee, Full Time Annual Salary * Salary percent"	SUNY HR			
+SUNY HR	STEM Indicator	Indicates a department is considered a STEM Department	SUNY HR		"Y, N"	
+SUNY HR	CIP Code	Classification of Instructional Programs for Instructional Departments	SUNY HR			
+SUNY HR	CUPA Code	College and University Professional Association for Instructional Departments.  CUPA Codes are used in the UUP Equity/Compression Study	SUNY HR			
