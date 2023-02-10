@@ -731,8 +731,8 @@ module.exports={
       }
       else if(facets.source){
         joins.push(`inner join entry_source as fSource on fSource.entry_id=e.id`);
-        if(facets.source="*") where.push(`fSource.source_id>0`);
-        else { where.push(`fSource.source=$fSource`); params[`$fSource`]=parseInt(facets.source); }
+        if(facets.source=="*") where.push(`fSource.source_id>0`);
+        else { where.push(`fSource.source_id=$fSource`); params[`$fSource`]=parseInt(facets.source); }
       }
 
       if(facets.extranet && facets.extranet=="-1"){
