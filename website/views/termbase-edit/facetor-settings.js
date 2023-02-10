@@ -319,6 +319,23 @@ Screenful.Facetor.panes=[{
       $select.on("change", Screenful.Facetor.change);
     }
 
+    if(termbaseMetadata.source.length>0){
+      $inme.append(`<div class="title"><span class="tab">${L("SOURCE")}</span></div>`);
+
+      //source:
+      var $select=$(`<select class="fullwidth" id="facSource"></select>`).appendTo($inme);
+      $select.append(`<option value="">(${L("any source or no source")})</option>`);
+      $select.append(`<option value="*">(${L("any source")})</option>`);
+      $select.append(`<option value="-1">(${L("no source")})</option>`);
+      termbaseMetadata.source=(termbaseMetadata.source || []);
+      termbaseMetadata.source.map(datum => {
+        var $option=$(`<option value="${datum.id}">${Spec.title(datum.title)}</option>`);
+        $option.data("datum", datum);
+        $option.appendTo($select);
+      });
+      $select.on("change", Screenful.Facetor.change);
+    }
+
     //------
 
     if(termbaseMetadata.extranet.length>0){
@@ -388,6 +405,7 @@ Screenful.Facetor.panes=[{
     ret.noteText=$("#facNoteText").val();
 
     ret.collection=$("#facCollection").val();
+    ret.source=$("#facSource").val();
 
     ret.extranet=$("#facExtranet").val();
     ret.hasComments=$("#facComments").val();

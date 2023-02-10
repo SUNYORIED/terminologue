@@ -313,6 +313,7 @@ module.exports={
     delete from entry_note;
     delete from entry_sortkey;
     delete from entry_xmpl;
+    delete from entry_source;
     delete from entry_xref;
     delete from entry_term;
     delete from history;
@@ -642,7 +643,6 @@ module.exports={
         where.push(`e.dStatus=$fDStatus`);
         params[`$fDStatus`]=parseInt(facets.dStatus);
       }
-
       if(facets.domain && facets.domain=="-1"){
         joins.push(`left outer join entry_domain as fDomain on fDomain.entry_id=e.id`);
         where.push(`fDomain.domain is null`);
@@ -723,6 +723,16 @@ module.exports={
         joins.push(`inner join entry_collection as fCollection on fCollection.entry_id=e.id`);
         if(facets.collection=="*") where.push(`fCollection.collection>0`);
         else { where.push(`fCollection.collection=$fCollection`); params[`$fCollection`]=parseInt(facets.collection); }
+      }
+
+      if(facets.source && facets.source=="-1"){
+        joins.push(`left outer join entry_source as fSource on fSource.entry_id=e.id`);
+        where.push(`fSource.source_id is null`);
+      }
+      else if(facets.source){
+        joins.push(`inner join entry_source as fSource on fSource.entry_id=e.id`);
+        if(facets.source="*") where.push(`fSource.source_id>0`);
+        else { where.push(`fSource.source=$fSource`); params[`$fSource`]=parseInt(facets.source); }
       }
 
       if(facets.extranet && facets.extranet=="-1"){
@@ -1100,7 +1110,10 @@ module.exports={
                                 module.exports.saveXrefs(db, termbaseID, entryID, entry, function(){
                                   //index my notes:
                                   module.exports.saveNotes(db, termbaseID, entryID, entry, function(){
-                                    callnext(entryID);
+                                    //index my sources:
+				    module.exports.saveSources(db, termbaseID, entryID, entry, function() {
+                                      callnext(entryID);
+				    });
                                   });
                                 });
                               });
@@ -1443,6 +1456,35 @@ module.exports={
       if(obj){
         db.run("insert into entry_note(entry_id, type, lang, text) values($entryID, $typeID, $lang, $text)", {$entryID: entryID, $typeID: obj.typeID, $lang: obj.lang, $text: obj.text}, function(err){
           if(err) console.log(err);
+          go();
+        });
+      } else {
+        callnext();
+      }
+    }
+  },
+  saveSources: function(db, termbaseID, entryID, entry, callnext) {
+    var assigHash={}; 
+    entry.definitions.map(ex => {
+      for(var key in ex.sources){
+        if(ex.sources[key].id) assigHash[ex.sources[key].id] = 1;
+      }
+    });
+    entry.examples.map(ex => {
+      for(var key in ex.sources){
+        if(ex.sources[key].id) assigHash[ex.sources[key].id] = 1;
+      }
+    });
+    var assigs = Object.keys(assigHash);
+    db.run("delete from entry_source where entry_id=$entryID", {$entryID: entryID}, function(err){
+      if(err) console.error(err);
+      go();
+    });
+    function go(){
+      var assig=parseInt(assigs.pop());
+      if(assig){
+        db.run("insert into entry_source(entry_id, source_id) values($entryID, $sourceID)", {$entryID: entryID, $sourceID: assig}, function(err){
+          if(err) console.error(err);
           go();
         });
       } else {
