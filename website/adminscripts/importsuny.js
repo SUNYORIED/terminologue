@@ -16,7 +16,7 @@ db.run('PRAGMA foreign_keys=on');
 var terms={};
 var termbaseID = 'sysadmglossary';
 var importUser = 'bridget.almas@suny.edu';
-var metadata = {'source': 1, 'collectionIR': 2, 'collectionSIRIS': 3, 'collectionAcronyms':4}
+var metadata = {'sourceIR': 1, 'collectionIR': 2, 'sourceSIRIS': 3, 'collectionAcronyms':4}
 var importDate="2022-12-01T00:00:00";
 var toSave = {};
 
@@ -113,14 +113,19 @@ function doSources(db, callnext){
       en: 'IR'
     }
   };
-  ops.metadataUpdate(db, termbaseID, "source", metadata.source, JSON.stringify(json), function(){})
+  var json2={
+    title: {
+      en: 'SIRIS Data Elements'
+    }
+  };
+  ops.metadataUpdate(db, termbaseID, "source", metadata.sourceIR, JSON.stringify(json), function(){})
+  ops.metadataUpdate(db, termbaseID, "source", metadata.sourceSIRIS, JSON.stringify(json2), function(){})
   console.log("sources done");
   callnext();
 }
 
 function doCollections(db, callnext){
   collections = [];
-  collections.push({_id:metadata.collectionSIRIS, title: {en: 'SIRIS Data Elements'}});
   collections.push({_id:metadata.collectionIR, title: {en: 'IR Glossary'}});
   collections.push({_id:metadata.collectionAcronyms, title: {en: 'Common Acronyms'}});
   doOne();
@@ -186,7 +191,7 @@ function doEntry(xml,id,collections){
         tbxType=="explanation"
       ){
         //definition:
-        var obj={texts: {}, domains: [], sources: [{'id':metadata.source, 'lang':'en'}], nonessential: "0"};
+        var obj={texts: {}, domains: [], sources: [{'id':metadata.sourceIR, 'lang':'en'}], nonessential: "0"};
         obj.texts[langCode]=tbxValue;
         entry.definitions.push(obj);
       } else if(
@@ -198,14 +203,12 @@ function doEntry(xml,id,collections){
       }
     }
   }
-  var mergedExample={texts: {'en':[]}, sources: [], nonessential: "0"};
+  var mergedExample={texts: {'en':[]}, sources: [{'id': metadata.sourceSIRIS, 'lang': 'en'}], nonessential: "0"};
   if (examplesToMerge.length > 0) {
     for (var i=0; i<examplesToMerge.length; i++) {
       mergedExample['texts']['en'].push(examplesToMerge[i].texts.en[0])
     }
     entry.examples.push(mergedExample)
-    // if it has an example it is a SIRIS data element
-    entry.collections.push([metadata.collectionSIRIS])
   }
   return entry;
 }
