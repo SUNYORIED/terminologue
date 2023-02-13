@@ -33,11 +33,26 @@ const TODAY = new Date();
 file = process.argv[2];
 getMetadata();
 
+function createMetadata(db, meta, type, callnext){
+  doOne();
+  function doOne(){
+    if(meta.length>0){
+      var data=meta.pop();
+      ops.metadataCreate(db, termbaseID, "type", null, JSON.stringify(collection), function(){
+        doOne();
+      })
+    } else {
+      callnext();
+    }
+  };
+}
+
+
 function doTXT(){
   var siteconfig=JSON.parse(fs.readFileSync("../siteconfig.json", "utf8").trim());
   ops.siteconfig=siteconfig;
+  var entries = [];
   fs.readFile(file, "utf-8", (err, data) => {
-    entries = [];
     var lines = data.split("\n");
     lines.forEach((line, index) => {
       if (index > 0) {
@@ -53,6 +68,7 @@ function doTXT(){
 	 if (data['definition']) { data['definition'] = data['definition'].replace(/^"/,'').replace(/"$/,''); }
 	 if (data['collection']) { data['collection'] = data['collection'].replace(/^"/,'').replace(/"$/,''); }
 	 if (data['example']) { data['example'] = data['example'].replace(/^"/,'').replace(/"$/,''); }
+	 if (data['source']) { data['source'] = data['source'].replace(/^"/,'').replace(/"$/,''); }
 	 if (data['refs']) {
            console.log('Xref import not coded - ignoring');
          }
@@ -84,10 +100,13 @@ function doTXT(){
 
       }
     })
+    db.run("BEGIN TRANSACTION");
     entries.forEach(entry => { 
-      console.log(entry);
+      console.log(`Save ${entry}`);
       ops.entrySave(db, termbaseID, null, JSON.stringify(entry), importUser, {},function(){});
     });
+    db.run("COMMIT");
+    db.close();
   });
 }
 
