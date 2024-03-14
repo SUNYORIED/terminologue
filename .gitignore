@@ -76,3 +76,4 @@ scripts/_entrylist.txt
 scripts/fiat.txt
 siteconfig.json
 exportimport/_*.*
+*.*~
