@@ -1,6 +1,6 @@
 const path=require("path");
 const fs=require("fs-extra");
-const xmldom=require("xmldom"); //https://www.npmjs.com/package/xmldom
+const xmldom=require("@xmldom/xmldom"); //https://www.npmjs.com/package/@xmldom/xmldom
 const sqlite3=require('sqlite3').verbose(); //https://www.npmjs.com/package/sqlite3
 const sha1=require('sha1'); //https://www.npmjs.com/package/sha1
 const markdown=require("markdown").markdown; //https://www.npmjs.com/package/markdown
@@ -484,7 +484,15 @@ module.exports={
   },
 
   wordSplit: function(wording, langOrNull){
-    var words=[]; wording.split(/[\s\.\,\(\)\[\]\{\}\'\-0-9]/).map(w => { if(w) words.push(w); });
+    //var words=[]; wording.split(/[\s\.\,\(\)\[\]\{\}\'\-0-9]/).map(w => { if(w) words.push(w); });
+      //naive word split, we don't do it like this any more
+    var words=[]; wording.split(/[\p{Z}\p{S}\p{N}\p{P}\p{P}]/u).map(w => { if(w) words.push(w); });
+      //word split on any character which belongs to one of these Unicode categories:
+      // - Z = Separator
+      // - S = Symbol
+      // - N = Number
+      // - P = Punctuation
+      // - C = Other
     return words;
   },
 
@@ -2623,7 +2631,7 @@ module.exports={
           fs.appendFileSync(path, col.title, "utf8");
         });
         fs.appendFileSync(path, `\n`, "utf8");
-        db.all(`select id, json from entries where id in (${ids})`, {$ids: ids}, function(err, rows){
+        db.all(`select id, json from entries where id in (${ids})`, {}, function(err, rows){
           if(err) console.error(err);
           rows.map(row => {
             var entry=JSON.parse(row.json);

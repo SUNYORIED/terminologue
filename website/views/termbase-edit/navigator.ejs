@@ -26,8 +26,8 @@
 		<script type="text/javascript" src="../../libs/screenful/screenful-user.js"></script>
 		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-user.css" />
 		<script type="text/javascript">
-		var termbaseConfigs=<%-JSON.stringify(termbaseConfigs)%>;
-		var termbaseMetadata=<%-JSON.stringify(termbaseMetadata)%>;
+		var termbaseConfigs=<%-JSON.stringify(termbaseConfigs).replace(/</g, "&lt;")%>;
+		var termbaseMetadata=<%-JSON.stringify(termbaseMetadata).replace(/</g, "&lt;")%>;
 		</script>
 		<script type="text/javascript">
 		Screenful.User.loggedin=<%=(user.loggedin ? "true" : "false")%>;
@@ -166,7 +166,10 @@
 			</script>
 		<%}%>
 
-		<link type="text/css" rel="stylesheet" href="../../../furniture/ui.css" />
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-curtain.css" />
+		<script type="text/javascript" src="../../libs/screenful/screenful-curtain.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="../../furniture/ui.css" />
 	</head>
 	<body class="x-narrow x-editorShown">
 		<%-include("../header.ejs", {user: user, termbaseID: termbaseID, termbaseConfigs: termbaseConfigs, sectionID: "edit", rootPath: "../../", L: L})%>

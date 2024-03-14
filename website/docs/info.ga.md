@@ -14,7 +14,9 @@ D’fhorbair Fiontar & Scoil na Gaeilge bogearra *Terminologue* ar dtús chun li
 
 ## Faisnéis um chosaint sonraí
 
-Ní bhailímid aon sonraí úsáide. Nuair a chláraíonn tú do chuntas ar *Terminologue.org*, soláthraíonn tú seoladh ríomhphoist agus pasfhocal dúinn. Ní roinnfimid do sheoladh ríomhphoist le duine ar bith eile ach coimeádaimid an ceart dul i dteagmháil leat maidir le seirbhís *Terminologue.org* ó am go ham. Seoltar do phasfhocal thar nasc slán agus haiseáiltear é sula ndéantar é a shábháil chuig an mbunachar sonraí. Ciallaíonn sé seo nach bhfuil rochtain ag aon duine, muidne fiú, ar do phasfhocal. Is féidir leat do bhunachair théarmaíochta a chumrú le bheith ar fáil go poiblí nó go príobháideach.
+Bailímid sonraí úsáide áirithe ar na codanna poiblí den suíomh gréasáin *Terminologue.org* (i.e. na codanna den suíomh nach bhfuil faoi chosaint pasfhocail) le cabhair seirbhísí mar [Plausible](https://plausible.io). Úsáidimid Plausible chun eolas a thaifeadadh mar gheall ar cad as a dtagann ár gcuid úsáideoirí agus cad a dhéanann siad agus iad ar an suíomh. Bailíonn agus stórálann Plausible sonraí teicniúla faoin mbrabhsálaí agus faoin ríomhaire a úsáidtear chun cuairt a thabhairt ar an suíomh. Úsáidimid na sonraí bailithe ag Plausible chun tuairiscí comhiomlánaithe a chruthú ar líon, suíomh agus gníomhaíocht ár n-úsáideoirí. Cuireann na tuairiscí seo bonn eolais faoinár bpleananna forbartha don todhchaí. Ní sonraí pearsanta na sonraí seo, de réir shainmhíniú GDPR an AE, agus ní chuireann na sonraí seo ar ár gcumas úsáideoirí aonair a shainaithint. Coimeádaimid an ceart againn féin méadracht úsáide chomhiomlánaithe a thuairisciú agus/nó a fhoilsiú.
+
+Ní dhéantar aon script rianaithe nó anailísíochta a chur leis na comhdéadain phríobháideacha ina ndéantar eagarthóireacht, riar nó cumrú ar chnuasaigh téarmaí aonair. Nuair a chláraíonn tú do chuntas ar *Terminologue.org*, soláthraíonn tú seoladh ríomhphoist agus pasfhocal dúinn. Ní roinnfimid do sheoladh ríomhphoist le duine ar bith eile ach coimeádaimid an ceart dul i dteagmháil leat maidir le seirbhís *Terminologue.org* ó am go ham. Seoltar do phasfhocal thar nasc slán agus haiseáiltear é sula ndéantar é a shábháil chuig an mbunachar sonraí. Ciallaíonn sé seo nach bhfuil rochtain ag aon duine, muidne fiú, ar do phasfhocal. Is féidir leat do bhunachair théarmaíochta a chumrú le bheith ar fáil go poiblí nó go príobháideach.
 
 ## Teagmháil
 
@@ -26,14 +28,16 @@ Má theastaíonn uait comhéadan úsáideora agus doiciméadacht *Terminologue* 
 
 - English: Michal Boleslav Měchura.
 - Gaeilge: Michal Boleslav Měchura; Fiontar & Scoil na Gaeilge.
-- česky: Michal Boleslav Měchura.
+- čeština: Michal Boleslav Měchura.
 - svenska: Henrik Nilsson.
 - Cymraeg: n/a
 - suomi: Heini Nurminen.
 - Nederlands: Jeremy Sneyers.
 - русский: Arina Klimina.
-- Español: [Víctor López Martínez](https://www.linkedin.com/in/translatorvictorlopez/)
-- Arabic: Hassane Darir (<h.darir@uca.ac.ma>).
+- español: [Víctor López Martínez](https://www.linkedin.com/in/translatorvictorlopez/)
+- العربية: Hassane Darir (<h.darir@uca.ac.ma>).
 - hrvatski: translation students of the Faculty of Humanities and Social Sciences, University of Osijek: Jelena Bungić, Dunja Dernej, Irena Iličević, Iris Koščević, Katarina Mandarić, Lea Maras, Anamarija Pezer, Sonja Skrletović, Tomislav Stojanović, Valentina Jelić, Lorena Šeda, Matej Šibalić, Mihaela Šmehil, Vedrana Vestić.
 - Deutsch: Mohammed Aqalqol.
-- lietuvių: Sigita Rackevičienė, Andrius Utka, Agnė Bielinskienė.
+- lietuvių kalba: Sigita Rackevičienė, Andrius Utka, Agnė Bielinskienė.
+- norsk bokmål: Pia Vinkki, Idar Wilsgård.
+- Ελληνικά: George Sarlas.
