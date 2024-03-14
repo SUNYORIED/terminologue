@@ -9,7 +9,9 @@ module.exports={
 
 //---
 function GetMetadatum(md, type, id){
-  for (var i=0; i<md[type].length; i++) if(md[type][i].id==id) return md[type][i];
+  if (md[type] != null) {
+      for (var i=0; i<md[type].length; i++) if(md[type][i].id==id) return md[type][i];
+  }
   return null;
 }
 function GetLang(cg, abbr){
