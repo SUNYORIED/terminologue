@@ -21,8 +21,8 @@
 #dictheader {margin-bottom: 20px; position: relative;}
 body.homepage { overflow: auto !important;}
 body.homepage .invelope.top { padding-top: 50px;}
-body.homepage #dictheader {text-align: center; margin-top: 100px; margin-bottom: 50px; background-image: url(SUNY.png); background-repeat: no-repeat; background-position:left; background-size: contain;}
-body.entrypage #dictheader {margin-top: 60px; background-image: url(SUNY.png); background-position:right; background-size: contain; background-repeat: no-repeat;}
+body.homepage #dictheader {text-align: center; margin-top: 100px; margin-bottom: 50px;}
+body.entrypage #dictheader {margin-top: 60px;}
 @media (max-width: 800px){ body.homepage #dictheader {margin-top: 75px; margin-bottom: 60px;} }
 @media (min-width: 1650px){ body.entrypage #dictheader {margin-top: 20px;} }
 #dictheader div.titleContainer {}
@@ -129,7 +129,7 @@ body.entrypage #dictheader div.titleContainer span.dictTitle a.dictTitle {font-s
   .pager {margin-left: 0px; margin-right: 0px; margin-top: 20px; border-radius: 4px;}
 }
 
-#dictfooter { padding: 10px 0px 50px 0px; color: #666666; font-size: 0.9rem; }
+#dictfooter { padding: 10px 0px 50px 0px; color: #666666; font-size: 0.9rem; background-image: url(SUNY.png); background-repeat: no-repeat; background-position:center; background-size:contain;}
 #dictfooter > div {margin: 10px 0px;}
 [dir="ltr"] #dictfooter > div.right {float: right;}
 [dir="rtl"] #dictfooter > div.right {float: left;}
